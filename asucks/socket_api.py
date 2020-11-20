@@ -70,7 +70,10 @@ class SocketProxyConnection(ProxyConnection):
     async def close_all(self):
         #  pylint: disable=bare-except
         for sock in [self.source_socket, self.destination_socket]:
-            self.loop.remove_reader(sock)
+            try:
+                self.loop.remove_reader(sock)
+            except:
+                pass
             try:
                 sock.close()
             except:
@@ -132,7 +135,10 @@ class SocketServer:
             loop=self.loop,
             config=self.config,
         )
-        await conn.process_request()
+        try:
+            await conn.process_request()
+        except:
+            log.exception("Unexpected error handling request for %s", address)
         log.debug("Done handling requests for %s", address)
 
     def close(self):
