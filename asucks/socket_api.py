@@ -137,7 +137,7 @@ class SocketServer:
         )
         try:
             await conn.process_request()
-        except:
+        except:  # pylint: disable=bare-except
             log.exception("Unexpected error handling request for %s", address)
         log.debug("Done handling requests for %s", address)
 
